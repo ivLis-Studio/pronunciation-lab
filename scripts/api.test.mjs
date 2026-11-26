@@ -29,6 +29,8 @@ test('returns IPA, original segments, and 24 different target spellings', async 
   assert.deepEqual(all.unresolved, []);
   assert.equal(Object.keys(all.outputs).length, 24);
   assert.equal(all.outputs.japanese, 'アンニョンハセヨ');
+  assert.equal(all.romanization, 'Annyeonghaseyo');
+  assert.equal(parsed.romanization, 'Annyeonghaseyo');
   assert.ok(!Object.hasOwn(all.outputs, 'korean'));
 });
 

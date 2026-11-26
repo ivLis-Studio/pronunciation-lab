@@ -2,11 +2,11 @@
 
 # Pronunciation Lab
 
-**말의 뜻을 옮기는 대신, 들리는 소리를 다른 문자로.**
+**한 언어에서 들은 소리를 다른 문자의 읽기법으로.**
 
 25개 원어 · 600개 변환 방향 · 브라우저용 ES 모듈
 
-[변환기 열기](https://ivlis-studio.github.io/pronunciation-lab/) · [jsDelivr 모듈](https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@v1.0.0/dist/pronunciation.mjs) · [출처와 라이선스](./NOTICE.md)
+[변환기 열기](https://ivlis-studio.github.io/pronunciation-lab/) · [jsDelivr 모듈](https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@v1.0.1/dist/pronunciation.mjs) · [출처와 라이선스](./NOTICE.md)
 
 </div>
 
@@ -19,7 +19,7 @@
 ~~~html
 <pre id="result"></pre>
 <script type="module">
-  import { transliterate } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@v1.0.0/dist/pronunciation.mjs';
+  import { transliterate } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@v1.0.1/dist/pronunciation.mjs';
 
   const spelling = await transliterate('猫', {
     source: 'japanese',
@@ -44,7 +44,7 @@ GitHub Pages에서 제공하는 [동일한 ES 모듈](https://ivlis-studio.githu
 ### IPA를 바로 넣기
 
 ~~~js
-import { transliterate, transliterateAll } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@v1.0.0/dist/pronunciation.mjs';
+import { transliterate, transliterateAll } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@v1.0.1/dist/pronunciation.mjs';
 
 const kana = await transliterate('/a̠nɲjʌ̹ŋɦa̠sʰe̞jo/', {
   source: 'korean',
@@ -52,8 +52,8 @@ const kana = await transliterate('/a̠nɲjʌ̹ŋɦa̠sʰe̞jo/', {
   mode: 'ipa',
 });
 
-const { ipa, outputs } = await transliterateAll('안녕하세요', { source: 'korean' });
-console.log(ipa, outputs.japanese);
+const { ipa, outputs, romanization } = await transliterateAll('안녕하세요', { source: 'korean' });
+console.log(outputs.japanese, romanization); // アンニョンハセヨ Annyeonghaseyo
 ~~~
 
 - **`source` / `target`** · `japanese`, `korean`, `english` 같은 언어 ID입니다. 원어와 목표 언어는 서로 달라야 합니다.
@@ -61,6 +61,7 @@ console.log(ipa, outputs.japanese);
 - **`variant`** · 원어의 지역 옵션입니다. 예를 들어 영어는 `'US'`와 `'UK'`를 지원합니다. 목록은 `languages`에서 확인할 수 있습니다.
 - **`readNumbers`** · `true`로 설정하면 문장 안의 지원되는 정수를 원어의 기수로 읽습니다.
 - 사전과 규칙에서 읽기를 결정하지 못한 구간은 `□`로 표시되며, `transcribe`와 `transliterateAll`의 `unresolved`에서 확인할 수 있습니다.
+- 한국어를 읽을 수 있으면 `transcribe`와 `transliterateAll`의 `romanization`에 로마자 보조 표기도 포함됩니다.
 
 <details>
 <summary>25개 언어 ID</summary>

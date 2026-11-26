@@ -14507,6 +14507,13 @@ function koreanIPARomanization(chunks) {
   }).join('') : chunk.original).join('');
 }
 
+function formatKoreanRomanization(chunks,source,mode,hasUnresolved) {
+  if(source!=='korean'||hasUnresolved)return '';
+  const text=chunks.map(chunk=>chunk.numberWords??chunk.original).join('');
+  const romanized=mode==='ipa'?koreanIPARomanization(chunks):/[가-힣]/u.test(text)?hangulRomanization(text):'';
+  return romanized&&romanized[0].toUpperCase()+romanized.slice(1);
+}
+
 const apiProfiles = new Map(profiles.map(profile => [profile.id, profile]));
 
 export const languages = Object.freeze(profiles.map(({ id, name, script }) => Object.freeze({
@@ -14534,14 +14541,17 @@ async function prepareConversion(text, options) {
       unknownPhones: Array.from(sounds?.unknownPhones ?? []),
     };
   });
-  return { source, chunks, segments };
+  return { source, chunks, segments, mode };
 }
 
-function describeConversion({ source, segments }) {
+function describeConversion({ source, chunks, segments, mode }) {
+  const unresolved = [...new Set(segments.filter(segment => segment.unresolved).map(segment => segment.original))];
+  const romanization = formatKoreanRomanization(chunks, source, mode, unresolved.length > 0);
   return {
     source, segments,
     ipa: segments.map(segment => segment.ipa || (segment.unresolved ? '□' : segment.original)).join(''),
-    unresolved: [...new Set(segments.filter(segment => segment.unresolved).map(segment => segment.original))],
+    unresolved,
+    ...(romanization ? { romanization } : {}),
     unknownPhones: [...new Set(segments.flatMap(segment => segment.unknownPhones))],
   };
 }

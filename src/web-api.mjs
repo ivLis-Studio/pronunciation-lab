@@ -25,14 +25,17 @@ async function prepareConversion(text, options) {
       unknownPhones: Array.from(sounds?.unknownPhones ?? []),
     };
   });
-  return { source, chunks, segments };
+  return { source, chunks, segments, mode };
 }
 
-function describeConversion({ source, segments }) {
+function describeConversion({ source, chunks, segments, mode }) {
+  const unresolved = [...new Set(segments.filter(segment => segment.unresolved).map(segment => segment.original))];
+  const romanization = formatKoreanRomanization(chunks, source, mode, unresolved.length > 0);
   return {
     source, segments,
     ipa: segments.map(segment => segment.ipa || (segment.unresolved ? '□' : segment.original)).join(''),
-    unresolved: [...new Set(segments.filter(segment => segment.unresolved).map(segment => segment.original))],
+    unresolved,
+    ...(romanization ? { romanization } : {}),
     unknownPhones: [...new Set(segments.flatMap(segment => segment.unknownPhones))],
   };
 }

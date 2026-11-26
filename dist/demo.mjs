@@ -14507,6 +14507,13 @@ function koreanIPARomanization(chunks) {
   }).join('') : chunk.original).join('');
 }
 
+function formatKoreanRomanization(chunks,source,mode,hasUnresolved) {
+  if(source!=='korean'||hasUnresolved)return '';
+  const text=chunks.map(chunk=>chunk.numberWords??chunk.original).join('');
+  const romanized=mode==='ipa'?koreanIPARomanization(chunks):/[가-힣]/u.test(text)?hangulRomanization(text):'';
+  return romanized&&romanized[0].toUpperCase()+romanized.slice(1);
+}
+
 const controls=Object.fromEntries(['converter','source','variant','variant-label','input','convert','example','status','ipa','ipa-box','results','cards','input-hint','number-option','read-numbers'].map(id=>[id,document.getElementById(id)]));
 let inputMode='text', activeRequest=0;
 for (const profile of profiles) controls.source.add(new Option(profile.name,profile.id));
@@ -14628,10 +14635,7 @@ async function convert() {
     controls.ipa.textContent=mode==='ipa'?input:checked.map(chunk=>chunk.ipa && chunk.sounds.some(token=>token.sound)
       ? '/'+chunk.ipa.trim()+'/' : chunk.unknown || chunk.ipa ? '□' : chunk.wordBoundary ? ' ' : chunk.original).join('').replace(/\/\//gu,'/ /');
     controls['ipa-box'].hidden=false;
-    const romanizationText=chunks.map(chunk=>chunk.numberWords??chunk.original).join('');
-    const romanized=source==='korean' && !unresolved.length ? (mode==='ipa' ? koreanIPARomanization(chunks) :
-      /[가-힣]/u.test(romanizationText) ? hangulRomanization(romanizationText) : '') : '';
-    const capitalized=romanized && romanized[0].toUpperCase()+romanized.slice(1);
+    const capitalized=formatKoreanRomanization(chunks,source,mode,unresolved.length>0);
     controls.cards.replaceChildren(...profiles.filter(profile=>profile.id!==source).map(profile=>makeCard(
       profile,renderChunks(checked,source,profile.id),profile.id==='english'?capitalized:''
     )));
