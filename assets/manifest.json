@@ -1,0 +1,367 @@
+{
+  "embedded-kuromoji-1.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 3956825,
+    "sha256": "0803327762e1c93ca731e4319ab8343340f2806bb84941207782cde9d2d5a8eb"
+  },
+  "embedded-kuromoji-2.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 1692067,
+    "sha256": "02b7631be0d4de3a1a75cd9f9cc51536e4f94c9e6b389b813e06ba0f6e7de765"
+  },
+  "embedded-kuromoji-3.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 3111633,
+    "sha256": "193ae0035fff6fe812b58d9ee730e7a7d7ee601d918481ce51075c58114f6cc9"
+  },
+  "embedded-kuromoji-4.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 1605820,
+    "sha256": "d43d831cb6fb0f0a411739cd287a6d5e998e121a8daca614df14a81a0dcac586"
+  },
+  "embedded-kuromoji-5.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 1485576,
+    "sha256": "33efd5ffd87a70f669add093fa39dee44341d58f940844ef107c8fd98bb795b2"
+  },
+  "embedded-kuromoji-6.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 5916009,
+    "sha256": "60dbfc99a6ab993f30c5dab648bec6ad7f9aaefa5c14e1843837d95e509f8895"
+  },
+  "embedded-kuromoji-7.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 10512,
+    "sha256": "f7f991cdeb9bfd3e9c0e4577cc50ee0815a11c508cccd444a9d3ab3c81521100"
+  },
+  "embedded-kuromoji-8.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 1140,
+    "sha256": "6b210889548457c3006913afd12c8b525562255f2709e404604be9614a25e94c"
+  },
+  "embedded-kuromoji-9.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 1190,
+    "sha256": "6df12460e5477230bb6fd9641def918b699fc0a8868016b6c9f794488630509b"
+  },
+  "embedded-kuromoji-10.bin": {
+    "source": "embedded-kuromoji.js",
+    "bytes": 10540,
+    "sha256": "5b183a29f281acc7e0542beca47b83f7985047c0a2d27e78a66f32276be5ad11"
+  },
+  "japanese-lexicon-1.bin": {
+    "source": "japanese-lexicon.js",
+    "bytes": 1497854,
+    "sha256": "4dd8d09949c9ecf6c6365eb90fa756d83a82b69ab595d56bbf4a0467674026ef"
+  },
+  "japanese-offline-data-1.bin": {
+    "source": "japanese-offline-data.js",
+    "bytes": 182033,
+    "sha256": "166db251b17ff3b4dab77c6eb8fb5163b7864151d4420bb8704b85f988a473af"
+  },
+  "khmer-source-data-1.bin": {
+    "source": "khmer-source-data.js",
+    "bytes": 537987,
+    "sha256": "879ec2dc33615f8404a39e970492a93b1a0937c7f3e2dce1ec2eb7c4e0f35881"
+  },
+  "khmer-source-data-2.bin": {
+    "source": "khmer-source-data.js",
+    "bytes": 99590,
+    "sha256": "203ee67f72919d110888a7e595e589d97a34eb0d05381c0a08cbe17b6fdfd9f3"
+  },
+  "italian-lexicon-1.bin": {
+    "source": "italian-lexicon.js",
+    "bytes": 534080,
+    "sha256": "a4dc125c380a0f467049c5d1ed25bdb65f41bc5ffeb1d54835213b67d3c9a368"
+  },
+  "embedded-espeak-1.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 349220,
+    "sha256": "0caa44c9369df50948342b74d4e65f0fc54c284533ec38484da6f7d10da5fec4"
+  },
+  "embedded-espeak-2.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 293118,
+    "sha256": "32b3fbb1021954c0b958f614ab4aeed63117656d9ce781bfcb909a06233ad238"
+  },
+  "embedded-espeak-3.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 539015,
+    "sha256": "02c0204071b5c8fe532e069b23fb2605763b69e030dc8f44ef8aaf437af8c53e"
+  },
+  "embedded-espeak-4.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 37126,
+    "sha256": "4cbbf25f83657f930b6876ecdc0d8cfb9eabc1d67e2ce91a8e19f206a6941022"
+  },
+  "embedded-espeak-5.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 107993,
+    "sha256": "cbd76e7f51b0406ba4c1974f7c156c6153daaced77dee2292690f81ed96e4f86"
+  },
+  "embedded-espeak-6.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 2635,
+    "sha256": "2aa5571af28715dd1ae1aa78b1e2ef5fb136bbd16bd62a7ee7a6752031370e13"
+  },
+  "embedded-espeak-7.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 22763,
+    "sha256": "9768e653ebdaf0e2fba38977638e76e9f4ea0c9283f3f777acb1c255be1b3ba7"
+  },
+  "embedded-espeak-8.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 163614,
+    "sha256": "74de0d632cb0929c9784cf5b51042b63bd9ab7f046642572b3a297a3e6855cff"
+  },
+  "embedded-espeak-9.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 20738,
+    "sha256": "3b0f2539fed114c50472db4961a4347656e1f63b1af870af4738df27ff386ebf"
+  },
+  "embedded-espeak-10.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 32606,
+    "sha256": "fddd0e7afb7071134131dedecb8567ab76b09e3514abdb621c0d318dc5092945"
+  },
+  "embedded-espeak-11.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 20648,
+    "sha256": "9c6f13e917e751c16dc579e134e0cbb12029912861b39f09ec254f98de7f461d"
+  },
+  "embedded-espeak-12.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 96906,
+    "sha256": "c36d6d439a21bc50c0080dd6c83265d925ac5bacc981ca57f15f82d76d85d7ed"
+  },
+  "embedded-espeak-13.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 19474,
+    "sha256": "71003eb9f7697229de96e334a21631d2b529c5e82548b1a343e2e1bf0db10800"
+  },
+  "embedded-espeak-14.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 26345,
+    "sha256": "ab527da4f70717673073a255ba0bbbea9a483a6c690e087bfdc6a8b475ce7ff5"
+  },
+  "embedded-espeak-15.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 35535,
+    "sha256": "06482cb8fd5ff910e6781411255ab7c4af20a438b3a638d0bfa5ec2a6e6e4d7a"
+  },
+  "embedded-espeak-16.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 2378,
+    "sha256": "9450e497603b64ea7340aa931d5279d9a17e145de88ca2249ed4b2f56d7f14aa"
+  },
+  "embedded-espeak-17.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 23761,
+    "sha256": "7d2d92e6baeb1cf0480334270932f162464e6e76fe76880875ffee865276f133"
+  },
+  "embedded-espeak-18.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 40957,
+    "sha256": "2d83c37ffbbca4dc2d024c99531990806de30a07dc9373d545f9ea14f1bb9790"
+  },
+  "embedded-espeak-19.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 37188,
+    "sha256": "06e6339f9966a78b96be4e57a7c4f5e3cdf3e0dec52224d8bbf0dbc16ca8bba1"
+  },
+  "embedded-espeak-20.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 23446,
+    "sha256": "986021972d86cdc8bfd1a6770f407987527f0157522f7814da566575ed77e783"
+  },
+  "embedded-espeak-21.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 19809,
+    "sha256": "fc86c3832f38ed88a998008061fe5f11c1bba6e21fc267d5ef541c829b572e5b"
+  },
+  "embedded-espeak-22.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 22382,
+    "sha256": "d9f19f315deef2060f20f4b467b089ab788c43380927bb1ead24ef6e233b4256"
+  },
+  "embedded-espeak-23.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 240387,
+    "sha256": "76ba0bb8f92ad0f4ca163dc945496099addf1b1de3e4b454750811c695602e8a"
+  },
+  "embedded-espeak-24.bin": {
+    "source": "embedded-espeak.js",
+    "bytes": 158589,
+    "sha256": "1a9fbd5f8fe53f11007fcbbea618ad47d3826925118d1b48219df499a37a07d5"
+  },
+  "offline-sources-data-1.bin": {
+    "source": "offline-sources-data.js",
+    "bytes": 30949,
+    "sha256": "74c4585168579db78a8887dd42fc2d917e0ac3be26fef4991f1d4230918842bd"
+  },
+  "offline-sources-data-2.bin": {
+    "source": "offline-sources-data.js",
+    "bytes": 15071,
+    "sha256": "cd3cb9bf1903159f14ad0400d3cd5a760a1c77d8992c9ccb7b7d230882ab489b"
+  },
+  "offline-sources-data-3.bin": {
+    "source": "offline-sources-data.js",
+    "bytes": 2128942,
+    "sha256": "e7138effe011cd6039192eaa74588f2aea60cf262d7ad9c04083920d147f67ac"
+  },
+  "offline-sources-data-4.bin": {
+    "source": "offline-sources-data.js",
+    "bytes": 603666,
+    "sha256": "e45a786848b98d83ad3714b7969433b2a07a5f8c88d3fd899edd5d9c1c4f19fe"
+  },
+  "offline-sources-data-5.bin": {
+    "source": "offline-sources-data.js",
+    "bytes": 401798,
+    "sha256": "5e4198505f5c8d0e66e884ed88426b2c0b98b9b8a4e36821987d00bf66b4c2e5"
+  },
+  "offline-sources-data-6.bin": {
+    "source": "offline-sources-data.js",
+    "bytes": 424544,
+    "sha256": "5f72288df8950171deefedf8a5549d53c94daaff8d1cd8c9d028a9048508b8e8"
+  },
+  "offline-dictionary-tiers-data-1.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 461120,
+    "sha256": "f0525087cf14ed4f7fcdc9d91ac51f7021031c9a52f086e3c079cf6192ab2b00"
+  },
+  "offline-dictionary-tiers-data-2.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 732510,
+    "sha256": "3949efd3f7ad302f09d06b45cc090ed705d3a6a1ffa354b90530432187e63157"
+  },
+  "offline-dictionary-tiers-data-3.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 736512,
+    "sha256": "f9a7038514c0ca0bda969038034e1e4b98a48535f8e409f877b98f730849f148"
+  },
+  "offline-dictionary-tiers-data-4.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 727568,
+    "sha256": "3ea020f6253ae19f9aef4b9529214f882770448f4da6c9892146c8d6ca6c2893"
+  },
+  "offline-dictionary-tiers-data-5.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 560918,
+    "sha256": "cceabb7711eadf42f59166659195e6ee4b07cd9b91d3a14cc2ed7369bdaea766"
+  },
+  "offline-dictionary-tiers-data-6.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 148512,
+    "sha256": "b481d06fd1e18f417313f542a2224be5a80f93fd29446131418e71ead0a449ee"
+  },
+  "offline-dictionary-tiers-data-7.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 74280,
+    "sha256": "2849fadf8e857da20ac37f93788c8f93932bea4c2277cde6f3cececf5d05f742"
+  },
+  "offline-dictionary-tiers-data-8.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 481503,
+    "sha256": "9a7b1c97301f1860eaefe3534c86e9fb2525b77e1703bf8bbe3256127f4b3564"
+  },
+  "offline-dictionary-tiers-data-9.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 181649,
+    "sha256": "b9ee2f9cd3519505f0287d48c279b309290da8b729b26a656d85a4fef4fa5362"
+  },
+  "offline-dictionary-tiers-data-10.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 83950,
+    "sha256": "2fb3e5e5d155bb4551ec330f86dd4a0ccaa086cefe7ea35e48c7c53777e22ca4"
+  },
+  "offline-dictionary-tiers-data-11.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 52057,
+    "sha256": "f8384b02020391c29e97f125f07bef19ac528e5a161713ed4f53503e23679046"
+  },
+  "offline-dictionary-tiers-data-12.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 738797,
+    "sha256": "6eb7ff8a2e7229d2a7c34e08ce38a8f419a3b264d6fb04b31b8b7939bada15c4"
+  },
+  "offline-dictionary-tiers-data-13.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 502292,
+    "sha256": "72cb46f1909763b88d9fc39ca92ac502106f0d7c18dca4652660e2ac2357a8e5"
+  },
+  "offline-dictionary-tiers-data-14.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 327703,
+    "sha256": "687e94fc94e8979f3bc12e939471636db5bf243abd14e0a4c162e53d3442c811"
+  },
+  "offline-dictionary-tiers-data-15.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 187785,
+    "sha256": "e797fdf59a32ca3fef266eb5dc6a66f7e4a8991ae5ff31fae53389382304d6fe"
+  },
+  "offline-dictionary-tiers-data-16.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 370573,
+    "sha256": "ebbda8ce57ddaf1fa40b665285cbb5278ccde2ec70f1603e00ddd7f8cd26e425"
+  },
+  "offline-dictionary-tiers-data-17.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 308809,
+    "sha256": "007b59b4182a0d09d158a5c04de6fe1b4d2177d9febe81d26b7787b324448c01"
+  },
+  "offline-dictionary-tiers-data-18.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 317505,
+    "sha256": "beb100e7eea3087befdfb1f5e5df60214418c7165350f65ea3a641438fcd6ffe"
+  },
+  "offline-dictionary-tiers-data-19.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 311194,
+    "sha256": "4a6b1853e56ab206c09218fb8e9ddfd080bb1d6a28c96943a1e06092532f651d"
+  },
+  "offline-dictionary-tiers-data-20.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 309018,
+    "sha256": "61720f32290a4977acb988ec97afbb559e8643dfacbb6210b5b603e7d968d43b"
+  },
+  "offline-dictionary-tiers-data-21.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 112455,
+    "sha256": "ce8520c334f802eb6516ea60d56b74be420a196075a3ae8e2dd30c1225515d79"
+  },
+  "offline-dictionary-tiers-data-22.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 63343,
+    "sha256": "4602151e80efcc0f9f59e4a87ce6390350a92f96243eea1b8fff2fad01b3ee35"
+  },
+  "offline-dictionary-tiers-data-23.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 402478,
+    "sha256": "9b24db219591bca9548c1f62231baf568d7269ac3620921e5f78fc27724e06ce"
+  },
+  "offline-dictionary-tiers-data-24.bin": {
+    "source": "offline-dictionary-tiers-data.js",
+    "bytes": 115992,
+    "sha256": "9a431a8cc3d91c8d0b0a418d809eb6ceb2d4ce598ab178b4007b10a1b8a05427"
+  },
+  "arabic-supplement-data-1.bin": {
+    "source": "arabic-supplement-data.js",
+    "bytes": 113109,
+    "sha256": "9b78d3837d2916abdae396275f9d06e7697bc25b190e8a6c18b3126c057fb679"
+  },
+  "malay-jawi-data-1.bin": {
+    "source": "malay-jawi-data.js",
+    "bytes": 92824,
+    "sha256": "98fae17604e26455ff49a24ab961e12ab75fa58e0e0ab20b15be71d9afc1ec04"
+  },
+  "arabic-vocalizer-data-1.bin": {
+    "source": "arabic-vocalizer-data.js",
+    "bytes": 6738262,
+    "sha256": "3a6ab645126482880bdfb797050d786daf971f1cf2607318d04bff4ba55d26c1"
+  },
+  "mandarin-context-data-1.bin": {
+    "source": "mandarin-context-data.js",
+    "bytes": 1682999,
+    "sha256": "3b9cb730f9bfd9df0a78866cc6ff1fd05ff65e88b122eeabbe7cbe66ad3516ba"
+  }
+}

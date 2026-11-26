@@ -1,0 +1,2 @@
+// Cached dictionaries from the pinned IPA-Translator release. Cantonese additions are from the LSHK Jyutping table (CC BY 4.0), credited in chinese-data.js.
+const offlineSourceDictionaries={"khmer":asset("offline-sources-data-1.bin"),"jamaican":asset("offline-sources-data-2.bin"),"japanese":asset("offline-sources-data-3.bin"),"cantonese":asset("offline-sources-data-4.bin"),"./json/zh_hans.json":asset("offline-sources-data-5.bin"),"./json/zh_hant.json":asset("offline-sources-data-6.bin")};

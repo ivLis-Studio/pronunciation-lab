@@ -1,0 +1,17 @@
+{
+  "name": "pronunciation-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-script pronunciation respelling across 25 languages",
+  "license": "GPL-3.0-only",
+  "main": "./dist/pronunciation.mjs",
+  "exports": "./dist/pronunciation.mjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test scripts/api.test.mjs"
+  }
+}

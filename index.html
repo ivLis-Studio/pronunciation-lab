@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>발음 표기 변환기</title>
+<style>
+:root{--paper:#f5f3ed;--white:#fffefa;--ink:#20251c;--muted:#5f6658;--line:#d9ddd1;--accent:#294c36;--soft:#e5ede1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 "Segoe UI","Malgun Gothic",system-ui,sans-serif}
+.wrap{width:min(1120px,100% - 48px);margin:auto}
+header{padding:52px 0 26px}
+h1{font-size:clamp(32px,6vw,56px);margin:0 0 7px;letter-spacing:-.055em;line-height:1.13}
+header p{margin:0;color:var(--muted)}
+main{padding-bottom:40px}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px}
+.toolbar,.result-head,.card-head,.input-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.toolbar{margin-bottom:14px;flex-wrap:wrap}
+.field{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+label{font-size:14px;font-weight:650}
+button,select,textarea{font:inherit;color:inherit}
+select,button{border:1px solid var(--line);background:var(--white);border-radius:9px;padding:7px 11px;min-height:39px}
+button{cursor:pointer}
+button:hover{background:var(--soft)}
+button[aria-pressed=true]{background:var(--soft);border-color:#b7c8b7;font-weight:700}
+button:disabled{opacity:.65;cursor:wait}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.modes{display:flex;gap:5px}
+textarea{display:block;width:100%;resize:vertical;min-height:94px;border:1px solid var(--line);border-radius:10px;background:#faf9f4;padding:14px 16px;line-height:1.55;font-size:20px}
+.input-footer{margin-top:11px;align-items:start}
+.number-option{display:flex;align-items:center;gap:6px;font-size:14px;margin:8px 0 2px}
+.number-option[hidden]{display:none}
+.primary{background:var(--accent);color:white;border-color:var(--accent);font-weight:650;padding-inline:21px}
+.primary:hover{background:#376247}
+.hint,.status{color:var(--muted);font-size:13px;margin:0}
+.status{margin:10px 0 0}
+.status:empty{display:none}
+.status[data-error=true]{color:#842b25}
+.ipa-box{margin-top:12px;padding:13px 15px;border-radius:10px;background:var(--soft);white-space:pre-wrap;overflow-wrap:anywhere}
+.ipa-label{font-weight:700;font-size:13px;margin-inline-end:8px}
+#ipa{font:500 16px/1.45 ui-monospace,"Segoe UI",monospace}
+.result-head{margin:26px 0 12px;align-items:baseline;flex-wrap:wrap}
+h2{font-size:24px;margin:0;letter-spacing:-.04em}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:13px;padding:13px 14px;min-width:0}
+.card[data-key=true]{border-color:#a4bba9}
+.card h3{margin:0;font-size:14px;line-height:1.35}
+.script{color:var(--muted);font-size:12px;margin-top:2px}
+.copy{font-size:12px;min-height:30px;padding:3px 9px;flex-shrink:0}
+.reading{font-size:22px;line-height:1.42;font-weight:600;margin:9px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.extra{color:var(--accent);font-size:14px;margin:8px 0 0;overflow-wrap:anywhere}
+footer{margin-top:22px;color:var(--muted);font-size:13px}
+a{color:var(--accent)}
+[hidden]{display:none!important}
+@media(max-width:790px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.wrap{width:calc(100% - 28px)}header{padding:30px 0 20px}.panel{padding:14px}.grid{grid-template-columns:minmax(0,1fr)}.reading{font-size:20px}.input-footer{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>발음 표기 변환기</h1><p>한 언어의 소리를 다른 언어 화자가 읽을 수 있는 표기로 옮깁니다.</p></header>
+<main>
+<form class="panel" id="converter">
+  <div class="toolbar">
+    <div class="field">
+      <label for="source">원어</label><select id="source"></select>
+      <label for="variant" id="variant-label" hidden>사전 변형</label><select id="variant" hidden></select>
+      <button type="button" id="example">예문 넣기</button>
+    </div>
+    <div class="modes" role="group" aria-label="입력 방식">
+      <button type="button" data-mode="text" aria-pressed="true">원문 입력</button>
+      <button type="button" data-mode="ipa" aria-pressed="false">IPA 입력</button>
+    </div>
+  </div>
+  <textarea id="input" aria-label="원문" maxlength="1000" spellcheck="false" dir="auto">안녕하세요</textarea>
+  <label class="number-option" id="number-option"><input type="checkbox" id="read-numbers"> 문장 속 정수도 발음으로 표기</label>
+  <div class="input-footer"><p class="hint" id="input-hint">선택한 원어의 IPA 사전을 불러옵니다. 입력한 문장은 브라우저에서 처리됩니다.</p><button class="primary" id="convert">변환</button></div>
+  <p class="status" id="status" role="status"></p>
+  <div class="ipa-box" id="ipa-box" hidden><span class="ipa-label">IPA</span><bdi id="ipa"></bdi></div>
+</form>
+<section id="results" hidden aria-labelledby="result-title">
+  <div class="result-head"><h2 id="result-title">발음 표기</h2><p class="hint">24개 언어 · 발음 근사 표기</p></div>
+  <div class="grid" id="cards"></div>
+</section>
+<footer>한국어 받침과 이어 읽기는 <a href="https://korean.go.kr/kornorms/m/m_regltn.do?regltn_code=0002" target="_blank" rel="noreferrer">국립국어원 표준 발음법</a>을 참고했습니다. 일본어 문맥 분석에는 내장 <a href="https://github.com/takuyaa/kuromoji.js" target="_blank" rel="noreferrer">Kuromoji 0.1.2</a>와 IPADIC을 사용합니다. 보완 읽기 데이터는 <a href="https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project" target="_blank" rel="noreferrer">EDRDG의 JMdict</a> 2026-11-23 자료에서 추출했습니다. <a href="https://www.edrdg.org/edrdg/licence.html" target="_blank" rel="noreferrer">CC BY-SA 4.0</a> · 일본어의 로마자 관용 읽기에는 <a href="https://github.com/UniversalDependencies/UD_Japanese-GSD/tree/c662dc96ed5ee5ac0fc8b5e44261557e431f50e6" target="_blank" rel="noreferrer">UD Japanese GSD</a>의 학습 자료(CC BY-SA 4.0)도 사용합니다. 사전 IPA는 <a href="https://github.com/lotusfa/IPA-Translator" target="_blank" rel="noreferrer">IPA-Translator</a>에서 가져옵니다. 내장 사전은 전체 사전과 <a href="https://tatoeba.org/en/downloads" target="_blank" rel="noreferrer">Tatoeba</a> 문장 빈도(CC BY 2.0 FR)로 선별한 표제어를 사용합니다. 사전에 없는 읽기는 내장 <a href="https://github.com/Spelling-Creator/spellophone/tree/v0.2.1" target="_blank" rel="noreferrer">eSpeak NG / Spellophone 0.2.1</a>(GPL-3.0-or-later) 또는 <a href="https://www.mona.uwi.edu/dllp/sites/default/files/dllp/spelling-jamaican-the-jamaican-way-Handout.pdf" target="_blank" rel="noreferrer">Cassidy–JLU 철자 규칙</a>으로 추정합니다. 목표 언어의 음소와 음절을 기준으로 표기합니다. 원어 IPA의 성조는 한어병음, 월병, 베트남어에서 가까운 형태로 표시합니다. 다른 표기에서는 성조와 강세가 생략될 수 있습니다. 음절 관측과 이탈리아어 사전에는 IPA-Translator와 <a href="https://github.com/CUNY-CL/wikipron/tree/d282e848a211ea31cfd730f0ced8bc8cdab9e83d" target="_blank" rel="noreferrer">WikiPron</a> 이탈리아어 데이터(위키낱말사전, CC BY-SA 4.0)를 사용했습니다. 크메르어 보조 발음 사전은 <a href="https://github.com/google/language-resources/blob/bc72dd6527aee6963910b9afc69a57f7b9aacc1d/km/data/lexicon.tsv" target="_blank" rel="noreferrer">© 2018 Google Inc.</a>의 데이터를 선별하고 IPA를 정리한 자료입니다. <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></footer>
+<p>이 프로젝트의 <a href="https://github.com/ivLis-Studio/pronunciation-lab">소스 코드</a>와 <a href="https://github.com/ivLis-Studio/pronunciation-lab/blob/main/NOTICE.md">출처 및 라이선스</a></p>
+</main>
+</div>
+<script type="module" src="./dist/demo.mjs"></script>
+</body>
+</html>
