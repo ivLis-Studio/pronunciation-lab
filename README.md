@@ -6,7 +6,7 @@
 
 25개 원어 · 600개 변환 방향 · 브라우저용 ES 모듈
 
-[변환기 열기](https://ivlis-studio.github.io/pronunciation-lab/) · [jsDelivr 모듈](https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@618a531d2799fbe319fb0502d9a56c5048561ae8/dist/pronunciation.mjs) · [출처와 라이선스](./NOTICE.md)
+[변환기 열기](https://ivlis-studio.github.io/pronunciation-lab/) · [jsDelivr 모듈](https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@1b4dd975734e763cb2fad3a76987c810552b76ea/dist/pronunciation.mjs) · [출처와 라이선스](./NOTICE.md)
 
 </div>
 
@@ -14,12 +14,12 @@
 
 일본어 **猫**를 한글로 **네코**, 한국어 **안녕하세요**를 가타카나로 **アンニョンハセヨ**. 원문을 IPA(국제음성기호)로 읽고 목표 언어의 문자 관습에 맞춰 다시 적습니다.
 
-아래 예제를 HTML에 넣으면 됩니다. v1.0.1 소스 커밋에 고정된 jsDelivr URL이며, API 키가 필요 없습니다.
+아래 예제를 HTML에 넣으면 됩니다. v1.0.2 소스 커밋에 고정된 jsDelivr URL이며, API 키가 필요 없습니다.
 
 ~~~html
 <pre id="result"></pre>
 <script type="module">
-  import { transliterate } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@618a531d2799fbe319fb0502d9a56c5048561ae8/dist/pronunciation.mjs';
+  import { transliterate } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@1b4dd975734e763cb2fad3a76987c810552b76ea/dist/pronunciation.mjs';
 
   const spelling = await transliterate('猫', {
     source: 'japanese',
@@ -44,7 +44,7 @@ GitHub Pages에서 제공하는 [동일한 ES 모듈](https://ivlis-studio.githu
 ### IPA를 바로 넣기
 
 ~~~js
-import { transliterate, transliterateAll } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@618a531d2799fbe319fb0502d9a56c5048561ae8/dist/pronunciation.mjs';
+import { transliterate, transliterateAll } from 'https://cdn.jsdelivr.net/gh/ivLis-Studio/pronunciation-lab@1b4dd975734e763cb2fad3a76987c810552b76ea/dist/pronunciation.mjs';
 
 const kana = await transliterate('/a̠nɲjʌ̹ŋɦa̠sʰe̞jo/', {
   source: 'korean',
