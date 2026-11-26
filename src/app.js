@@ -417,20 +417,59 @@ function formatKoreanRomanization(chunks,source,mode,hasUnresolved) {
   return romanized&&romanized[0].toUpperCase()+romanized.slice(1);
 }
 
-const controls=Object.fromEntries(['converter','source','variant','variant-label','input','convert','example','status','ipa','ipa-box','results','cards','input-hint','number-option','read-numbers'].map(id=>[id,document.getElementById(id)]));
+const controls=Object.fromEntries(['converter','source','variant','variant-label','input','convert','example','status','ipa','ipa-box','results','cards','input-hint','number-option','read-numbers','ui-language'].map(id=>[id,document.getElementById(id)]));
 let inputMode='text', activeRequest=0;
-for (const profile of profiles) controls.source.add(new Option(profile.name,profile.id));
+let currentStatus={notes:[],error:false};
+for(const profile of profiles) controls.source.add(new Option(profile.name,profile.id));
+for(const {locale,native} of uiLocaleList) {
+  const option=new Option(native,locale);
+  option.lang=locale;
+  option.dir='auto';
+  controls['ui-language'].add(option);
+}
+controls['ui-language'].addEventListener('change',()=>{
+  selectUILocale(matchUILocale(controls['ui-language'].value));
+  try {
+    localStorage.setItem('pronunciation-lab:language',ui.locale);
+  } catch {}
+  const url=new URL(location.href);
+  url.searchParams.set('lang',ui.locale);
+  history.replaceState(null,'',url);
+});
 
 function updateVariant() {
   const config=LANGUAGES[controls.source.value];
   const keys=Object.keys(config?.variants ?? {});
-  controls.variant.replaceChildren(...keys.map(key=>new Option(key,key,false,key===config.defaultVariant)));
+  controls.variant.replaceChildren(...keys.map(key=>new Option(uiVariantName(key),key,false,key===config.defaultVariant)));
   controls.variant.hidden=controls['variant-label'].hidden=inputMode==='ipa'||keys.length===0;
   controls['number-option'].hidden=inputMode==='ipa';
 }
-function setStatus(message,error=false) {
-  controls.status.textContent=message;
-  controls.status.dataset.error=String(error);
+function renderStatus() {
+  controls.status.textContent=currentStatus.notes.map(({key,language,values,limit=6,space=false})=>{
+    const label=message(key,language?{language:uiLanguageName(language)}:undefined);
+    if(!values?.length) return label;
+    const listed=values.slice(0,limit).map(value=>key==='unavailable'?uiLanguageName(value):value);
+    const list=space?listed.join(' '):uiList.format(listed);
+    const remainder=values.length-limit;
+    return label+' · '+list+(remainder>0?' · '+message('more',{count:uiNumbers.format(remainder)}):'');
+  }).join('  ');
+  controls.status.dataset.error=String(currentStatus.error);
+}
+function setStatus(notes=[],error=false) {
+  currentStatus={notes:typeof notes==='string'?[{key:notes}]:notes,error};
+  renderStatus();
+}
+
+function updateCardLabels(card) {
+  const profile=profiles.find(profile=>profile.id===card.dataset.target);
+  const name=uiLanguageName(profile.id);
+  card.querySelector('h3').textContent=name;
+  card.querySelector('.script').textContent=uiScriptName(profile);
+  const copy=card.querySelector('.copy');
+  copy.textContent=message(copy.dataset.state ?? 'copy');
+  copy.setAttribute('aria-label',message('copyLabel',{language:name}));
+  const label=card.querySelector('.extra-label');
+  if(label) label.textContent=message(label.dataset.label)+' · ';
 }
 
 function makeCard(profile,text,romanization) {
@@ -442,32 +481,35 @@ function makeCard(profile,text,romanization) {
   top.className='card-head';
   const label=document.createElement('div');
   const heading=document.createElement('h3');
-  heading.textContent=profile.name;
   const script=document.createElement('div');
   script.className='script';
-  script.textContent=profile.script;
   label.append(heading,script);
   const button=document.createElement('button');
   button.type='button';
   button.className='copy';
-  button.textContent='복사';
-  button.setAttribute('aria-label',profile.name+' 발음 표기 복사');
   const reading=document.createElement('p');
   reading.className='reading';
+  reading.lang=uiCatalogs[profile.id].locale;
   reading.dir='auto';
   reading.textContent=text;
+  let copyTimer;
+  const copyState=state=>{
+    button.dataset.state=state;
+    button.textContent=message(state);
+  };
   button.onclick=async()=>{
+    clearTimeout(copyTimer);
     try {
       await navigator.clipboard.writeText(text);
-      button.textContent='복사됨';
-      setTimeout(()=>{button.textContent='복사';},1200);
+      copyState('copied');
+      copyTimer=setTimeout(()=>copyState('copy'),1200);
     } catch {
       const selection=window.getSelection();
       const range=document.createRange();
       range.selectNodeContents(reading);
       selection.removeAllRanges();
       selection.addRange(range);
-      button.textContent='선택됨';
+      copyState('selected');
     }
   };
   top.append(label,button);
@@ -475,9 +517,16 @@ function makeCard(profile,text,romanization) {
   if(romanization) {
     const extra=document.createElement('p');
     extra.className='extra';
-    extra.textContent=(inputMode==='text'?'한글 기반 로마자 병기 · ':'IPA 기반 로마자 병기 · ')+romanization;
+    const extraLabel=document.createElement('span');
+    extraLabel.className='extra-label';
+    extraLabel.dataset.label=inputMode==='text'?'romanText':'romanIPA';
+    const roman=document.createElement('bdi');
+    roman.dir='ltr';
+    roman.textContent=romanization;
+    extra.append(extraLabel,roman);
     card.append(extra);
   }
+  updateCardLabels(card);
   return card;
 }
 
@@ -488,12 +537,12 @@ async function convert() {
   controls.results.hidden=true;
   controls['ipa-box'].hidden=true;
   if(!input) {
-    setStatus('변환할 '+(mode==='ipa'?'IPA를':'원문을')+' 입력해 주세요.',true);
+    setStatus(mode==='ipa'?'emptyIPA':'emptyText',true);
     controls.input.focus();
     return;
   }
   controls.convert.disabled=true;
-  setStatus(mode==='text'?'발음 사전을 확인하는 중…':'IPA를 변환하는 중…');
+  setStatus(mode==='text'?'loadingText':'loadingIPA');
   try {
     const chunks=await getChunks(input,source,variant,mode,controls['read-numbers'].checked);
     if(request!==activeRequest) return;
@@ -501,40 +550,34 @@ async function convert() {
     const usable=checked.filter(chunk=>chunk.sounds?.some(token=>token.sound));
     const unresolved=[...new Set(checked.filter(chunk=>chunk.unknown || chunk.ipa && !chunk.sounds.some(token=>token.sound)).map(chunk=>chunk.original))];
     if(!usable.length) {
-      setStatus(mode==='ipa'?'읽을 수 있는 IPA 기호를 찾지 못했습니다.':
-        '입력에서 읽기를 찾지 못했습니다'+(unresolved.length?' · '+unresolved.slice(0,5).join(', '):'')+'. 원어를 확인하거나 IPA를 직접 입력해 보세요.',true);
+      const notes=[{key:mode==='ipa'?'noIPA':'noReading'}];
+      if(unresolved.length && mode==='text') notes.push({key:'unresolved',values:unresolved,limit:5});
+      setStatus(notes,true);
       return;
     }
     const notes=[];
-    if(checked.some(chunk=>chunk.ipaDelimiterIssue))notes.push('짝이 없는 IPA 구분 기호가 있습니다.');
-    if(unresolved.length) notes.push('□ 읽기 미확인 · '+unresolved.slice(0,6).join(', ')+(unresolved.length>6?' 외 '+(unresolved.length-6)+'개':''));
+    if(checked.some(chunk=>chunk.ipaDelimiterIssue))notes.push({key:'delimiter'});
+    if(unresolved.length)notes.push({key:'unresolved',values:unresolved});
     const unavailable=[...new Set(checked.map(chunk=>chunk.unavailable).filter(Boolean))];
-    if(unavailable.length)notes.push('사전을 불러오지 못한 언어 · '+unavailable.map(id=>profiles.find(profile=>profile.id===id).name).join(', '));
+    if(unavailable.length)notes.push({key:'unavailable',values:unavailable,limit:unavailable.length});
     const unknownPhones=[...new Set(checked.flatMap(chunk=>[...(chunk.sounds?.unknownPhones ?? [])]))];
-    if(unknownPhones.length) notes.push('처리하지 못한 IPA 기호 · '+unknownPhones.slice(0,8).join(' '));
+    if(unknownPhones.length)notes.push({key:'unknownPhones',values:unknownPhones,limit:8,space:true});
     const inferred=new Map();
     for(const chunk of checked)if(chunk.source) {
       if(!inferred.has(chunk.source))inferred.set(chunk.source,new Set());
       inferred.get(chunk.source).add(chunk.original);
     }
-    for(const [language,words] of inferred) {
-      const name=profiles.find(profile=>profile.id===language).name;
-      notes.push(name+'로 읽음 · '+[...words].slice(0,6).join(', ')+(words.size>6?' 외 '+(words.size-6)+'개':''));
-    }
-    if(checked.some(chunk=>chunk.numberWords))notes.push('정수를 원어의 기수로 읽었습니다.');
-    if(checked.some(chunk=>chunk.ruleBased))notes.push('사전에 없는 일부 읽기는 철자 규칙으로 추정했습니다.');
-    if(checked.some(chunk=>chunk.khmerInferred))notes.push('일부 크메르어 읽기는 철자에서 음절 발음을 추정했습니다.');
-    if(checked.some(chunk=>chunk.khmerVariant))notes.push('일부 크메르어 읽기는 사전의 다른 철자와 연결했습니다.');
-    if(checked.some(chunk=>chunk.khmerSupplement))notes.push('일부 크메르어 읽기는 내장 보조 발음 사전으로 찾았습니다.');
-    if(checked.some(chunk=>chunk.offlineJapanese))notes.push('일본어 읽기는 내장 사전과 기본 분절로 보완했습니다.');
+    for(const [language,words] of inferred) notes.push({key:'inferred',language,values:[...words]});
+    const diagnostics={
+      numberWords:'numbersRead',ruleBased:'ruleBased',khmerInferred:'khmerInferred',
+      khmerVariant:'khmerVariant',khmerSupplement:'khmerSupplement',offlineJapanese:'offlineJapanese',
+      spellingRecovered:'spellingRecovered',vocalized:'vocalized',fallback:'fallback',stressRecovered:'stressRecovered',
+    };
+    for(const [flag,key] of Object.entries(diagnostics))if(checked.some(chunk=>chunk[flag]))notes.push({key});
     const ambiguous=[...new Set(checked.filter(chunk=>chunk.ambiguous).map(chunk=>chunk.original))];
-    if(ambiguous.length) notes.push('사전에 발음 후보가 여러 개 있음 · '+ambiguous.slice(0,5).join(', ')+(ambiguous.length>5?' 외 '+(ambiguous.length-5)+'개':''));
+    if(ambiguous.length)notes.push({key:'ambiguous',values:ambiguous,limit:5});
     const suggested=[...new Set(checked.filter(chunk=>chunk.contextual).map(chunk=>chunk.original))];
-    if(suggested.length)notes.push('문장 발음으로 후보 선택 · '+suggested.slice(0,5).join(', '));
-    if(checked.some(chunk=>chunk.spellingRecovered))notes.push('일부 읽기는 다른 철자에서 발음을 추정했습니다.');
-    if(checked.some(chunk=>chunk.vocalized))notes.push('아랍어 일부 읽기는 문맥으로 모음을 추정했습니다.');
-    if(checked.some(chunk=>chunk.fallback)) notes.push('일부 읽기는 eSpeak NG로 보완했습니다.');
-    if(checked.some(chunk=>chunk.stressRecovered))notes.push('일부 읽기의 강세는 원어 규칙에 따라 표시했습니다.');
+    if(suggested.length)notes.push({key:'contextual',values:suggested,limit:5});
     controls.ipa.textContent=mode==='ipa'?input:checked.map(chunk=>chunk.ipa && chunk.sounds.some(token=>token.sound)
       ? '/'+chunk.ipa.trim()+'/' : chunk.unknown || chunk.ipa ? '□' : chunk.wordBoundary ? ' ' : chunk.original).join('').replace(/\/\//gu,'/ /');
     controls['ipa-box'].hidden=false;
@@ -542,10 +585,10 @@ async function convert() {
     controls.cards.replaceChildren(...profiles.filter(profile=>profile.id!==source).map(profile=>makeCard(
       profile,renderChunks(checked,source,profile.id),profile.id==='english'?capitalized:''
     )));
-    setStatus(notes.join('  '));
+    setStatus(notes);
     controls.results.hidden=false;
-  } catch(error) {
-    if(request===activeRequest) setStatus(error.message+' 인터넷 연결을 확인하거나 IPA 입력을 사용해 주세요.',true);
+  } catch {
+    if(request===activeRequest) setStatus('failure',true);
   } finally {
     if(request===activeRequest) controls.convert.disabled=false;
   }
@@ -556,7 +599,7 @@ function clearResults() {
   controls.results.hidden=true;
   controls['ipa-box'].hidden=true;
   controls.convert.disabled=false;
-  setStatus('');
+  setStatus();
 }
 controls.converter.addEventListener('submit',event=>{event.preventDefault();convert();});
 controls.input.addEventListener('input',clearResults);
@@ -576,7 +619,7 @@ controls.example.addEventListener('click',()=>{
   convert();
 });
 let lastText='', lastDirectIPA='';
-for (const button of document.querySelectorAll('[data-mode]')) {
+for(const button of uiModeButtons) {
   button.addEventListener('click',()=>{
     if(inputMode===button.dataset.mode) return;
     const currentIPA=controls['ipa-box'].hidden?'':controls.ipa.textContent;
@@ -588,17 +631,15 @@ for (const button of document.querySelectorAll('[data-mode]')) {
       controls.input.value=lastText || currentExample();
     }
     inputMode=button.dataset.mode;
-    for (const modeButton of document.querySelectorAll('[data-mode]')) {
+    for(const modeButton of uiModeButtons) {
       modeButton.setAttribute('aria-pressed',String(modeButton===button));
     }
-    controls.input.setAttribute('aria-label',inputMode==='ipa'?'IPA':'원문');
-    controls['input-hint'].textContent=inputMode==='ipa'
-      ?'IPA를 붙여 넣으세요. /…/나 […]가 있으면 그 안을 변환합니다. 원어 설정은 소리 해석에 사용됩니다.'
-      :'선택한 원어의 IPA 사전을 불러옵니다. 입력한 문장은 브라우저에서 처리됩니다.';
+    updateModeLabels();
     updateVariant();
     clearResults();
     if(controls.input.value.trim()) convert();
   });
 }
+selectUILocale(preferredUILocale());
 updateVariant();
 convert();

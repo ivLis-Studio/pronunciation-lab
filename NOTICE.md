@@ -19,6 +19,8 @@ Pronunciation Lab changes IPA-Translator’s source lookup, adds phonological ad
 | CLDR numeral rules | Unicode, Inc., [CLDR RBNF snapshot](https://github.com/unicode-org/cldr/tree/acd6d88ae493633240e19a87a721076a8a75c310/common/rbnf), [Unicode license](./licenses/CLDR-Unicode-3.0.txt). [Odia numerals](https://en.wikipedia.org/w/index.php?title=Odia_numerals&oldid=1331382088), CC BY-SA 4.0. Jamaican forms use the [Open Grammar descriptions](https://opengrammar.github.io/jam/#_cardinal_numerals) and [UWI Cassidy–JLU spelling handout](https://www.mona.uwi.edu/dllp/sites/default/files/dllp/spelling-jamaican-the-jamaican-way-Handout.pdf) as linguistic references. |
 | Tatoeba | [Tatoeba contributors](https://tatoeba.org/en/downloads), CC BY 2.0 FR. Sentence exports were used to rank the bundled common-word subsets. The sentence exports are not included in this repository. |
 
+The Korean renderer also references the [National Institute of Korean Language’s Standard Pronunciation Rules](https://korean.go.kr/kornorms/m/m_regltn.do?regltn_code=0002). The Jamaican renderer uses the Cassidy–JLU rules cited above when estimating readings.
+
 Creative Commons licenses: [CC BY 2.0 FR](https://creativecommons.org/licenses/by/2.0/fr/), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Licenses in this table apply to their identifiable datasets and derivatives independently.
 
 The JavaScript source used for the browser builds is in `src/`. `npm run build` generates the versioned modules. Compressed blobs in `assets/` can be inspected with a gzip decoder. Keep the upstream source references and the JMdict snapshot date up to date when preparing revised data releases.

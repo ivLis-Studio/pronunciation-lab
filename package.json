@@ -12,6 +12,6 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node --test scripts/api.test.mjs"
+    "test": "node --test scripts/api.test.mjs scripts/locales.test.mjs"
   }
 }
