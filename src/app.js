@@ -239,9 +239,9 @@ async function readMixedText(input,source,variant) {
     if(!language)return [{original:text}];
     try {
       const chunks=jawi?await readMalayJawi(text):await readSourceText(text,language,language===source?variant:'');
-      return language===source?chunks:chunks.map(chunk=>chunk.ipa&&!chunk.source?{...chunk,source:language}:chunk);
+      return language===source?chunks:chunks.map(chunk=>(chunk.ipa||chunk.unknown)&&!chunk.source?{...chunk,source:language}:chunk);
     } catch {
-      return splitMissingText(text).map(chunk=>chunk.unknown?{...chunk,unavailable:language}:chunk);
+      return splitMissingText(text).map(chunk=>chunk.unknown?{...chunk,source:language,unavailable:language}:chunk);
     }
   }));
   return results.flat();
@@ -293,14 +293,21 @@ function readDirectIPA(input) {
     splitDirectIPA(input,output);
     return output;
   }
+  function appendOutside(text) {
+    for(const original of text.split(/([\/[\]／［］])/u).filter(Boolean)) {
+      output.push({original,ipaDelimiterIssue:directIPADelimiters.test(original)});
+    }
+  }
   let start=0;
   for(const span of wrapped) {
-    if(span.index>start)output.push({original:input.slice(start,span.index)});
+    appendOutside(input.slice(start,span.index));
     const end=span.index+span[0].length;
+    output.push({original:input[span.index],ipaWrapper:true});
     splitDirectIPA(input.slice(span.index+1,end-1),output,true);
+    output.push({original:input[end-1],ipaWrapper:true});
     start=end;
   }
-  if(start<input.length)output.push({original:input.slice(start)});
+  appendOutside(input.slice(start));
   return output;
 }
 
@@ -356,13 +363,22 @@ async function readSourceText(input,source,variant) {
   return fillDictionaryStress(punctuated,source);
 }
 
+function analyzeReadings(chunks,source) {
+  return chunks.map(chunk=>chunk.ipa?{...chunk,sounds:tokenizeIPA(chunk.ipa,chunk.source??source)}:chunk);
+}
+
+function startsReadingGroup(chunk,previousLanguage,language) {
+  return chunk.phraseBreak||chunk.spaceBefore||language!==previousLanguage;
+}
+
 function renderChunks(chunks,source,target) {
   let output='', previousWasReading=false, previousLanguage;
   for(const chunk of chunks) {
+    if(chunk.ipaWrapper)continue;
     const language=chunk.source??source;
     const reading=chunk.ipa ? renderStructuredTarget(chunk.sounds ?? tokenizeIPA(chunk.ipa,language),language,target,chunk.phraseBreak) : '';
     if(reading && previousWasReading && (
-      chunk.phraseBreak || chunk.spaceBefore || language!==previousLanguage || ['mandarin','cantonese'].includes(target) || (['mandarin','cantonese'].includes(language) && latinRules[target])
+      startsReadingGroup(chunk,previousLanguage,language) || ['mandarin','cantonese'].includes(target) || (['mandarin','cantonese'].includes(language) && latinRules[target])
     )) output+=' ';
     output+=reading || (chunk.unknown || chunk.ipa ? '□' : chunk.wordBoundary ? ' ' : chunk.original);
     previousWasReading=Boolean(reading);
@@ -397,7 +413,7 @@ function koreanIPARomanization(chunks) {
 function formatKoreanRomanization(chunks,source,mode,hasUnresolved) {
   if(source!=='korean'||hasUnresolved)return '';
   const text=chunks.map(chunk=>chunk.numberWords??chunk.original).join('');
-  const romanized=mode==='ipa'?koreanIPARomanization(chunks):/[가-힣]/u.test(text)?hangulRomanization(text):'';
+  const romanized=mode==='ipa'?koreanIPARomanization(chunks.filter(chunk=>!chunk.ipaWrapper)):/[가-힣]/u.test(text)?hangulRomanization(text):'';
   return romanized&&romanized[0].toUpperCase()+romanized.slice(1);
 }
 
@@ -481,7 +497,7 @@ async function convert() {
   try {
     const chunks=await getChunks(input,source,variant,mode,controls['read-numbers'].checked);
     if(request!==activeRequest) return;
-    const checked=chunks.map(chunk=>chunk.ipa ? {...chunk,sounds:tokenizeIPA(chunk.ipa,chunk.source ?? source)} : chunk);
+    const checked=analyzeReadings(chunks,source);
     const usable=checked.filter(chunk=>chunk.sounds?.some(token=>token.sound));
     const unresolved=[...new Set(checked.filter(chunk=>chunk.unknown || chunk.ipa && !chunk.sounds.some(token=>token.sound)).map(chunk=>chunk.original))];
     if(!usable.length) {

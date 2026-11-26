@@ -4,6 +4,26 @@ export const languages = Object.freeze(profiles.map(({ id, name, script }) => Ob
   id, name, script, variants: Object.freeze(Object.keys(LANGUAGES[id]?.variants ?? {})),
 })));
 
+function originalSegmentText(chunks, text, normalized) {
+  const spellings = chunks.map(chunk => chunk.original);
+  if (text === normalized || spellings.join('') !== normalized) return spellings;
+  const boundaries = new Map([[0, 0]]);
+  let normalizedOffset = 0;
+  for (const { segment, index } of new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text)) {
+    normalizedOffset += segment.normalize('NFC').length;
+    boundaries.set(normalizedOffset, index + segment.length);
+  }
+  let start = 0;
+  const restored = spellings.map(spelling => {
+    const end = start + spelling.length;
+    const original = boundaries.has(start) && boundaries.has(end)
+      ? text.slice(boundaries.get(start), boundaries.get(end)) : undefined;
+    start = end;
+    return original;
+  });
+  return normalizedOffset === normalized.length && restored.every(spelling => spelling !== undefined) ? restored : spellings;
+}
+
 async function prepareConversion(text, options) {
   if (typeof text !== 'string') throw new TypeError('text must be a string');
   const { source, variant = '', mode = 'text', readNumbers = false } = options ?? {};
@@ -14,29 +34,46 @@ async function prepareConversion(text, options) {
     throw new RangeError('Unknown variant for ' + source + ': ' + variant);
   }
   const input = text.normalize('NFC');
-  const chunks = await getChunks(input, source, variant, mode, readNumbers);
-  const segments = chunks.map(chunk => {
-    const language = chunk.source ?? source;
-    const ipa = chunk.ipa ?? '';
-    const sounds = ipa ? tokenizeIPA(ipa, language) : undefined;
-    return {
-      original: chunk.original, ipa, source: language,
-      unresolved: Boolean(chunk.unknown || ipa && !sounds.some(phone => phone.sound)),
-      unknownPhones: Array.from(sounds?.unknownPhones ?? []),
-    };
-  });
+  const chunks = analyzeReadings(await getChunks(input, source, variant, mode, readNumbers), source);
+  const initial = originalSegmentText(chunks, text, input);
+  const segments = chunks.map((chunk, index) => ({
+    original: initial[index],
+    ipa: chunk.ipa ?? '',
+    source: chunk.source ?? source,
+    unresolved: Boolean(chunk.unknown || chunk.ipa && !chunk.sounds?.some(phone => phone.sound)),
+    unknownPhones: Array.from(chunk.sounds?.unknownPhones ?? []),
+    ...(chunk.ipaWrapper ? { delimiter: true } : {}),
+  }));
   return { source, chunks, segments, mode };
+}
+
+function assembledIPA(chunks, segments) {
+  let output = '', previousLanguage;
+  for (const [index, segment] of segments.entries()) {
+    const chunk = chunks[index];
+    if (chunk.ipaWrapper) continue;
+    if (segment.ipa && !segment.unresolved) {
+      if (previousLanguage && startsReadingGroup(chunk, previousLanguage, segment.source)) output += ' ';
+      output += segment.ipa;
+      previousLanguage = segment.source;
+    } else {
+      output += segment.unresolved ? '□' : chunk.wordBoundary ? ' ' : segment.original;
+      previousLanguage = undefined;
+    }
+  }
+  return output;
 }
 
 function describeConversion({ source, chunks, segments, mode }) {
   const unresolved = [...new Set(segments.filter(segment => segment.unresolved).map(segment => segment.original))];
   const romanization = formatKoreanRomanization(chunks, source, mode, unresolved.length > 0);
   return {
-    source, segments,
-    ipa: segments.map(segment => segment.ipa || (segment.unresolved ? '□' : segment.original)).join(''),
-    unresolved,
+    source, segments, unresolved,
+    ipa: assembledIPA(chunks, segments),
     ...(romanization ? { romanization } : {}),
     unknownPhones: [...new Set(segments.flatMap(segment => segment.unknownPhones))],
+    unpairedDelimiters: [...new Set(chunks.flatMap((chunk, index) => chunk.ipaDelimiterIssue ? [segments[index].original] : []))],
+    unavailableSources: [...new Set(chunks.map(chunk => chunk.unavailable).filter(Boolean))],
   };
 }
 

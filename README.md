@@ -38,7 +38,7 @@ GitHub Pages에서 제공하는 [동일한 ES 모듈](https://ivlis-studio.githu
 | --- | --- |
 | `transliterate(text, { source, target, … })` | `Promise<string>`. 선택한 목표 언어의 발음 표기 |
 | `transliterateAll(text, { source, … })` | `Promise<object>`. IPA와 `outputs`에 담긴 24개 목표 표기 |
-| `transcribe(text, { source, … })` | `Promise<object>`. `ipa`, `segments`, `unresolved`, `unknownPhones` |
+| `transcribe(text, { source, … })` | `Promise<object>`. `ipa`, `segments`, `unresolved`, `unknownPhones` 및 진단 정보 |
 | `languages` | 지원 언어의 `id`, 표시 이름, 문자, 지역 옵션 목록 |
 
 ### IPA를 바로 넣기
@@ -62,6 +62,12 @@ console.log(outputs.japanese, romanization); // アンニョンハセヨ Annyeon
 - **`readNumbers`** · `true`로 설정하면 문장 안의 지원되는 정수를 원어의 기수로 읽습니다.
 - 사전과 규칙에서 읽기를 결정하지 못한 구간은 `□`로 표시되며, `transcribe`와 `transliterateAll`의 `unresolved`에서 확인할 수 있습니다.
 - 한국어를 읽을 수 있으면 `transcribe`와 `transliterateAll`의 `romanization`에 로마자 보조 표기도 포함됩니다.
+
+### IPA 결과와 진단 정보
+
+- `ipa`는 구절이나 원어가 바뀌는 지점의 경계와 입력의 줄바꿈을 유지합니다. 예를 들어 `/aka//ak͈a/`의 IPA 결과는 `aka ak͈a`입니다.
+- `segments`의 `original`은 입력 조각입니다. 직접 IPA의 정상적인 여닫는 기호는 `delimiter: true`로 구분됩니다. 혼합 문장에서는 조각마다 `source`를 확인할 수 있습니다.
+- `unpairedDelimiters`에는 짝을 찾지 못한 IPA 구분 기호, `unavailableSources`에는 읽기 자료를 이용할 수 없었던 원어가 들어갑니다.
 
 <details>
 <summary>25개 언어 ID</summary>
